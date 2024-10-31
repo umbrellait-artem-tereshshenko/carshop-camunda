@@ -22,20 +22,51 @@ The BPMN diagram:
    
 ![image](https://github.com/user-attachments/assets/dd80a1cb-9fac-4ddd-ac45-78e6a2ea4f0d)
 
-From the Java perspective code flow consists of nornal REST API invocacation to fetch data for UI and some trigger REST endpoint to initiate 
+From the Java perspective code flow consists of nornml REST API invocacation to fetch data from UI and some trigger REST endpoint to initiate 
 Camunda BPM engine process:
 
-
+<code>
 runtimeService.createProcessInstanceByKey("car_order_flow")
                 .businessKey(carOrderDto.getId().toString())
                 .setVariable("order", carOrderDto)
                 .execute();
-                
+</code>
 
-Camunda Service Tasks are mapped to Java delegate objects inside application. 
+Camunda Service Tasks are mapped to Java delegate objects inside application:
 
-Camunda UserTask entities are triggered by REST endpoints invocation from UI and in correlates to code in such manner:
+<code>
+Component
+@AllArgsConstructor
+@Slf4j
+public class SendRequestForApprovalToBankDelegate extends AbstractDelegate {
 
+    private final RequestForApprovalService requestForApprovalService;
+
+    private final CarOrderRepository carOrderRepository;
+    private final PersonService personService;
+
+    @Override
+    @Transactional
+    public void run(DelegateExecution delegateExecution) {
+
+        log.info("Sending request for approval to bank");
+
+        CarOrderDto order = (CarOrderDto)delegateExecution.getVariable("order");
+
+        //Find any manager with bank role
+        Optional<Person> person = personService.findAnyPersonWithRole(Role.ROLE_BANK);
+
+        CarOrder carOrder = carOrderRepository.getReferenceById(order.getId());
+
+        requestForApprovalService.createRequestForApproval(carOrder, person.orElseThrow(
+                () -> new PersonNotFoundException("Person with bank role not found")));
+    }
+}
+</code>
+
+Camunda UserTask entities are triggered by the following code:
+
+<code>
 
  Task task = taskService.createTaskQuery()
                 .processInstanceBusinessKey(requestForApprovalDto.carOrder().getId().toString()).list().getFirst();
@@ -45,5 +76,5 @@ inputData.put("order", carOrderDto);
 
 askService.complete(task.getId(), inputData);
 
-
+</code>
 
