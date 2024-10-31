@@ -13,5 +13,9 @@ The APP publishes several API endpoints protected by Spring Security basic autho
 4. POST http://localhost:8080/sales - to accept/decline request for approval for driver license verification by authorized sales manager
 5. GET: http://localhost:8080/bank - to obtain list of sended requests for approval for loan verification by authorized bank manager
 4. POST http://localhost:8080/bank - to accept/decline request for approval for loan verification by authorized bank manager
+
+Please use Postman script collection to init Camunda BPM flow and interact with app:
+
+https://www.postman.com/spaceflight-explorer-97105024/artem-tereshcheko-umbrellait/collection/u041sue/spring-camunda-flow
    
 ![image](https://github.com/user-attachments/assets/58d214fc-82b5-4634-9a7b-a8bc62d3e56d)
