@@ -12,6 +12,6 @@ The APP publishes several API endpoints protected by Spring Security basic autho
 3. GET: http://localhost:8080/sales - to obtain list of sended requests for approval for driver license verification by authorized sales manager
 4. POST http://localhost:8080/sales - to accept/decline request for approval for driver license verification by authorized sales manager
 5. GET: http://localhost:8080/bank - to obtain list of sended requests for approval for loan verification by authorized bank manager
-4. POST http://localhost:8080/sales - to accept/decline request for approval for loan verification by authorized bank manager
+4. POST http://localhost:8080/bank - to accept/decline request for approval for loan verification by authorized bank manager
    
 ![image](https://github.com/user-attachments/assets/58d214fc-82b5-4634-9a7b-a8bc62d3e56d)
