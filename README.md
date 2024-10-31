@@ -17,5 +17,28 @@ The APP publishes several API endpoints protected by Spring Security basic autho
 Please use Postman script collection to init Camunda BPM flow and interact with app:
 
 https://www.postman.com/spaceflight-explorer-97105024/artem-tereshcheko-umbrellait/collection/u041sue/spring-camunda-flow
+
+The BPMN diagram:
    
-![image](https://github.com/user-attachments/assets/58d214fc-82b5-4634-9a7b-a8bc62d3e56d)
+![image](https://github.com/user-attachments/assets/dd80a1cb-9fac-4ddd-ac45-78e6a2ea4f0d)
+
+From the Java perspective code flow consists of nornal REST API invocacation to fetch data for UI and some trigger REST endpoint to initiate 
+Camunda BPM engine process:
+
+runtimeService.createProcessInstanceByKey("car_order_flow")
+                .businessKey(carOrderDto.getId().toString())
+                .setVariable("order", carOrderDto)
+                .execute();
+
+Camunda Service Tasks are mapped to Java delegate objects inside application. 
+
+Camunda UserTask entities are triggered by REST endpoints invocation from UI and in correlates to code in such manner:
+
+ Task task = taskService.createTaskQuery()
+                .processInstanceBusinessKey(requestForApprovalDto.carOrder().getId().toString()).list().getFirst();
+
+        Map<String, Object> inputData = new HashMap<>();
+        inputData.put("order", carOrderDto);
+
+        taskService.complete(task.getId(), inputData);
+
