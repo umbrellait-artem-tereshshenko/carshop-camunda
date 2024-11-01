@@ -1,4 +1,4 @@
-<b>carshop-camunda</b>
+# carshop-camunda
 
 This project represents PoC for working with Camunda BPM embedded engine and Spring Boot application. 
 
@@ -18,26 +18,27 @@ Please use Postman script collection to init Camunda BPM flow and interact with 
 
 https://www.postman.com/spaceflight-explorer-97105024/artem-tereshcheko-umbrellait/collection/u041sue/spring-camunda-flow
 
-The BPMN diagram:
+# The BPMN diagram:
    
 ![image](https://github.com/user-attachments/assets/dd80a1cb-9fac-4ddd-ac45-78e6a2ea4f0d)
 
 From the Java perspective code flow consists of nornmal REST API invocation to fetch data from UI and  trigger REST endpoint to initiate 
 Camunda BPM engine process inside facade class:
 
-<code>
+```java
    
 runtimeService.createProcessInstanceByKey("car_order_flow")
                 .businessKey(carOrderDto.getId().toString())
                 .setVariable("order", carOrderDto)
                 .execute();
-</code>
+```
 
 
 Camunda Service Tasks are mapped to Java delegate objects which are typical Spring Beans:
 
 
-<code>
+```java
+   
    
 @Component
 @AllArgsConstructor
@@ -67,14 +68,14 @@ public class SendRequestForApprovalToBankDelegate extends AbstractDelegate {
     }
 }
 
-</code>
+```
 
 
 Camunda UserTask entities are triggered by the following code inside facades:
 
 
 
-<code>
+```java
 
 Task task = taskService.createTaskQuery()
                 .processInstanceBusinessKey(requestForApprovalDto.carOrder().getId().toString()).list().getFirst();
@@ -85,5 +86,5 @@ inputData.put("order", carOrderDto);
 taskService.complete(task.getId(), inputData);
 
 
-</code>
+```
 
